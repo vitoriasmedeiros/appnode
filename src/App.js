@@ -1,18 +1,11 @@
 import React from 'react';
-import logo from './logo.svg';
+// import logo from './logo.svg';
 
-const tarefas = [
-  "Aula de componentes",
-  "Aula sobre propriedades e estados",
-  "Outra aula sobre UI"
-];
-
-class TarefaLista extends React.Component {
-  render() {
-    const titulo = this.props.title;
-    const dados = this.props.data;
-    const {title, data} = this.props;
-    console.log(this.props)
+function TarefaLista(props) {
+    // const titulo = props.title;
+    // const dados = props.data;
+    const {title, data} = props;
+    console.log(props)
     return (
       <div>
         <p>
@@ -24,37 +17,72 @@ class TarefaLista extends React.Component {
         </ul>
       </div>
     );
-  }
 }
 
 const Tarefa = (propriedades) => {
-  return (<div>
+  return (<form onSubmit={propriedades.onSubmit}>
     <p>{propriedades.title}</p>
-    <input type="text"></input>
-    <button type="submit">Criar nova tarefa</button>
-  </div>);
+    <input
+      type="text" 
+      value={propriedades.text} 
+      onChange={propriedades.onChange}
+    />
+    <button type="submit">
+        Criar nova tarefa
+    </button>
+  </form>);
 }
 
 class App extends React.Component {
-  state = {tarefas:[
-    "Aula de componentes",
-    "Aula sobre propriedades e estados",
-    "Outra aula sobre UI"
-  ],
-  text: "Minha nova terefa"
-};
+  state = {
+    tarefas: [
+      "Aula de componentes",
+      "Aula sobre propriedades e estados",
+      "Outra aula sobre UI"
+    ],
+    text: "Minha nova tarefa"
+  };
+  // constructor(props) {
+  //   super(props);
+  //   this.state = [];
+  // }
 
-    onChanged
-    render(){
-      return(
-        <div>
-          <TarefaLista data={this.state.tarefas} tittle = "Minhas terefas"></TarefaLista>
-          <Tarefa title="minha nova tarefa" text={this.state.tarefas} onChanged={(text)}></Tarefa>       
-        </div>
-         );
-      }
-    }
+  onChangeText(text) {
+    this.setState({text});
+  }
 
+  handleChangeText(texto) {
+    this.setState({text: texto})
+  }
 
+  addTask() {
+    const {tarefas, text} = this.state;
+    tarefas.push(text);
+    this.setState({
+      tarefas: tarefas,
+      text: "Texto da nova tarefa"
+    })
+  }
+
+  render() {
+    return (
+      <div>
+        <TarefaLista 
+          data={this.state.tarefas} 
+          title="Minha lista de tarefas" 
+        />
+        <Tarefa 
+          title="Nova tarefa" 
+          text={this.state.text}
+          onChange={(event) => this.handleChangeText(event.target.value)}
+          onSubmit={(event) => {
+            event.preventDefault();
+            this.addTask();
+          }}
+        />
+      </div>
+    );
+  }
+}
 
 export default App;
